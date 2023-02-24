@@ -46,7 +46,7 @@ export class User {
   name: string;
 
   @Field(() => String)
-  @prop({ required: true })
+  @prop({ required: true,unique:true })
   email: string;
 
   @prop({ required: true })
@@ -56,7 +56,7 @@ export class User {
 export const UserModel = getModelForClass<typeof User, QueryHelpers>(User);
 
 @InputType()
-export class CreateUserInput {
+export class registerInput {
   @Field(() => String)
   name: string;
 

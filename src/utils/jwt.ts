@@ -11,7 +11,6 @@ const privateKey = Buffer.from(
 ).toString("ascii");
 
 export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
-  console.log(config)
   return jwt.sign(object, privateKey, {
     ...(options && options),
     algorithm: "RS256",

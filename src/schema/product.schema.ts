@@ -24,16 +24,28 @@ export class Product {
   @prop({ required: true })
   description: string;
 
-  @Field(() => String)
+  @Field(() => Number)
   @prop({ required: true })
-  price: string;
+  price: number;
 
   @Field(() => String)
-  @prop({ required: true, default: () => `product_${nanoid()}, unique: true}` })
+  @prop({ required: true, default: () => `product_${nanoid()}`, unique: true })
   productId: string;
 }
 
 export const ProductModel = getModelForClass<typeof Product>(Product);
+
+@ObjectType()
+export class ProductResponse{
+  @Field(()=>String)
+  status: string;
+
+  @Field(()=>String)
+  message: string;
+
+  @Field(()=>Product)
+  product: Product;
+}
 
 @InputType()
 export class CreateProductInput {
@@ -57,6 +69,35 @@ export class CreateProductInput {
 
 @InputType()
 export class GetProductInput {
+  @Field()
+  productId: string;
+}
+
+@InputType()
+export class UpdateProductInput {
+  @Field()
+  productId: string;
+
+  @Field()
+  name: string;
+
+  @MinLength(50, {
+    message: "Description must be at least 50 characters",
+  })
+  @MaxLength(1000, {
+    message: "Description must not be more than 1000 characters",
+  })
+  @Field()
+  description: string;
+
+  @IsNumber()
+  @Min(1)
+  @Field()
+  price: number;
+}
+
+@InputType()
+export class DeleteProductInput{
   @Field()
   productId: string;
 }
