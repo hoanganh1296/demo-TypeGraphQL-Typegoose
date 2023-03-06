@@ -38,7 +38,7 @@ class UserService {
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
     });
-
+    
     // return the jwt
     return token;
   }
