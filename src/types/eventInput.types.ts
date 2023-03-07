@@ -8,3 +8,9 @@ export class CreateEventInput{
     @Field(()=>Number)
     maxVoucher?: number;
 }
+
+@InputType()
+export class GetEventInput {
+  @Field()
+  eventId: string;
+}

@@ -8,5 +8,8 @@ export default class EventResolver{
         return EventEntity.find()
     }
 
-    
+    @Query(()=>EventEntity)
+    event(){
+        return EventEntity.find()
+    }
 }
