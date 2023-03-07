@@ -1,21 +1,21 @@
-import dotenv from "dotenv";
-dotenv.config();
-import "reflect-metadata";
-import express from "express";
-import { buildSchema } from "type-graphql";
-import cookieParser from "cookie-parser";
-import { ApolloServer } from "apollo-server-express";
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
+import { ApolloServer } from "apollo-server-express";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import express from "express";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
 import { resolvers } from "./resolvers";
-import { connectToMongo } from "./utils/mongo";
-import { verifyJwt } from "./utils/jwt";
 import { User } from "./schema/user.schema";
 import Context from "./types/context";
 import authChecker from "./utils/authChecker";
-import config from "config"
+import { verifyJwt } from "./utils/jwt";
+import { connectToMongo } from "./utils/mongo";
+import { mysqlConnection } from "./utils/mysqlDataSource";
+dotenv.config();
 
 async function bootstrap() {
   // Build the schema
@@ -59,6 +59,7 @@ async function bootstrap() {
     console.log("App is listening on http://localhost:4000");
   });
   connectToMongo();
+  mysqlConnection();
 }
 
 bootstrap();
