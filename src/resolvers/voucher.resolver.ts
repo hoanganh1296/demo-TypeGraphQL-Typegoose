@@ -4,27 +4,48 @@ import { ApolloError } from "apollo-server-errors";
 import { CreateVoucherInput } from "../types/voucher.types";
 import { customAlphabet } from "nanoid";
 import { EventEntity } from "../entity/event.entity";
+import { AppDataSource } from "../utils/mysqlDataSource";
+import { InsertResult } from "typeorm";
 
 @Resolver()
 export default class VoucherResolver {
   @Mutation(() => VoucherEntity)
   async createVoucher(
     @Arg("input") input: CreateVoucherInput
-  ): Promise<VoucherEntity> {
-    const event = await EventEntity.findOneBy({ id: input.eventId });
-    if (!event) {
-      throw new ApolloError("Event not found", "400");
-    }
-    if (event.quantityCreated >= event.maxVoucher) {
-      throw new ApolloError("Maximum Voucher!", "400");
-    }
-    const newVoucher = new VoucherEntity();
-    newVoucher.code = nanoid().toUpperCase();
-    newVoucher.event = event;
-    await newVoucher.save();
-    event.quantityCreated += 1;
-    await event.save();
-    return newVoucher;
+  ): Promise<InsertResult> {
+    const code = nanoid();
+    const voucher = await AppDataSource.manager.transaction(
+      "SERIALIZABLE",
+      async (transactionalEntityManager) => {
+        const event = await transactionalEntityManager
+          .createQueryBuilder(EventEntity, "events")
+          .where("events.id = :id", { id: input.eventId })
+          .andWhere('"events"."quantityCreated" < "events"."maxVoucher"')
+          .getOne();
+  
+        if (!event) {
+          throw new ApolloError("Maximum voucher", "400");
+        }
+
+        await transactionalEntityManager
+          .createQueryBuilder(EventEntity, "events")
+          .update(EventEntity)
+          .set({ quantityCreated: () => '"events"."quantityCreated" + 1' })
+          .where("id = :id", { id: input.eventId })
+          .execute();
+
+        const newVoucher = await transactionalEntityManager
+          .createQueryBuilder()
+          .insert()
+          .into(VoucherEntity)
+          .values({ code: code, event: event })
+          .returning("*")
+          .execute();
+
+        return newVoucher.raw[0];
+      }
+    );
+    return voucher;
   }
 }
 
