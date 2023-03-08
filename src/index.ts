@@ -15,6 +15,8 @@ import authChecker from "./utils/authChecker";
 import { verifyJwt } from "./utils/jwt";
 import { connectToMongo } from "./utils/mongo";
 import { mysqlConnection } from "./utils/mysqlDataSource";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import config from "config"
 dotenv.config();
 
 async function bootstrap() {

@@ -10,7 +10,7 @@ const privateKey = Buffer.from(
   "base64"
 ).toString("ascii");
 
-export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
+export function signJwt(object: object, options?: jwt.SignOptions | undefined) {
   console.log(config)
   return jwt.sign(object, privateKey, {
     ...(options && options),

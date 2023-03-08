@@ -1,11 +1,11 @@
 import UserResolver from "./user.resolver";
 import ProductResolver from "./product.resolver";
 import EventResolver from "./event.resolver";
-import { VoucherEntity } from "../entity/voucher.entity";
+import VoucherResolver from "./voucher.resolver";
 
 export const resolvers = [
   UserResolver,
   ProductResolver,
   EventResolver,
-  VoucherEntity
+  VoucherResolver,
 ] as const;
