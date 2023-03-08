@@ -20,11 +20,10 @@ export class VoucherEntity extends BaseEntity {
   @Column({ nullable: false })
   code: string;
 
-  @Field(() => Number)
-  @Column({ default: 0 })
-  quantityCreated: number;
-
-  @ManyToOne(() => EventEntity, (event: EventEntity) => event.vouchers)
+  @ManyToOne(() => EventEntity, (event: EventEntity) => event.vouchers, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn({ name: "event_id" })
   event: EventEntity;
 }

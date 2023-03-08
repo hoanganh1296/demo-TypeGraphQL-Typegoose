@@ -1,5 +1,11 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { VoucherEntity } from "./voucher.entity";
 
 @Entity({ name: "events" })
@@ -25,5 +31,5 @@ export class EventEntity extends BaseEntity {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  vouchers: Promise<Array<VoucherEntity>>;
+  vouchers: Promise<VoucherEntity[]>;
 }

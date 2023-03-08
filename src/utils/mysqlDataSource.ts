@@ -21,8 +21,8 @@ const AppDataSource = new DataSource({
   username: mysqlUserName,
   password: mysqlPassword,
   database: "db",
-  subscribers: [],
   migrations: [],
+  subscribers: [],
 });
 
 

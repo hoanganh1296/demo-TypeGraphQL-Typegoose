@@ -1,0 +1,5 @@
+{
+    "operationName": null,
+    "query": "mutation {\n  createVoucher(input: {eventId: \"6\"}) {\n    code\n,  }\n}\n",
+    "variables": "{}"
+}
