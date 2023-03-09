@@ -1,37 +1,37 @@
 import { DataSource } from "typeorm";
-import {get} from "node-emoji";
+import * as path from "path";
+import { get } from "node-emoji";
 import config from "config";
-import { EventEntity } from "../entity/event.entity";
-import { VoucherEntity } from "../entity/voucher.entity";
+import { EventEntity } from "../entities/event.entity";
+import { VoucherEntity } from "../entities/voucher.entity";
 
-const mysqlHost = config.get<string>("mySQL_Host");
-const mysqlPort = config.get<number>("mySQL_Port");
-const mysqlUserName = config.get<string>("mySQL_UserName");
-const mysqlPassword = config.get<string>("mySQL_Password");
+const postgresqlHost = config.get<string>("postgreSQL_Host");
+const postgresqlPort = config.get<number>("postgreSQL_Port");
+const postgresqlUserName = config.get<string>("postgreSQL_UserName");
+const postgresqlPassword = config.get<string>("postgreSQL_Password");
 
-const entities = [EventEntity,VoucherEntity];
+const entities = [EventEntity, VoucherEntity];
 
-const AppDataSource = new DataSource({
-  type: "mysql",
-  host: mysqlHost,
-  port: mysqlPort,
-  entities,
+export const AppDataSource = new DataSource({
+  type: "postgres",
+  host: postgresqlHost,
+  port: postgresqlPort,
+  entities: [path.join(__dirname, "..", "/entities/*.ts")],
   synchronize: true,
-  logging: true,
-  username: mysqlUserName,
-  password: mysqlPassword,
-  database: "db",
-  migrations: [],
+  logging: false,
+  username: postgresqlUserName,
+  password: postgresqlPassword,
+  database: "graphQL",
+  migrations: [path.join(__dirname, "..", "/migrations/*.ts")],
   subscribers: [],
 });
 
-
-export const mysqlConnection = async (): Promise<void> => {
-    try {
-      await AppDataSource.initialize();
-      console.log(get("dvd"), "DB init -> Done!", get("dvd"));
-      entities.forEach((entity) => console.log(`Created ${entity.name}`));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+export const postgresqlConnection = async (): Promise<void> => {
+  try {
+    await AppDataSource.initialize();
+    console.log(get("dvd"), "DB init -> Done!", get("dvd"));
+    entities.forEach((entity) => console.log(`Created ${entity.name}`));
+  } catch (error) {
+    console.log(error);
+  }
+};

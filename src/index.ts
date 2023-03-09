@@ -8,13 +8,15 @@ import dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
+import morgan from "morgan"
+
 import { resolvers } from "./resolvers";
 import { User } from "./schema/user.schema";
 import Context from "./types/context";
 import authChecker from "./utils/authChecker";
 import { verifyJwt } from "./utils/jwt";
 import { connectToMongo } from "./utils/mongo";
-import { mysqlConnection } from "./utils/mysqlDataSource";
+import { postgresqlConnection } from "./utils/mysqlDataSource";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import config from "config"
 dotenv.config();
@@ -31,6 +33,7 @@ async function bootstrap() {
   const app = express();
 
   app.use(cookieParser());
+  app.use(morgan("combined"))
 
   // Create the apollo server
   const server = new ApolloServer({
@@ -61,7 +64,7 @@ async function bootstrap() {
     console.log("App is listening on http://localhost:4000");
   });
   connectToMongo();
-  mysqlConnection();
+  postgresqlConnection();
 }
 
 bootstrap();

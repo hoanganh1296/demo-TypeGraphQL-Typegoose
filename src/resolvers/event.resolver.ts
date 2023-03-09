@@ -1,6 +1,6 @@
 import { ApolloError } from "apollo-server-errors";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import { EventEntity } from "../entity/event.entity";
+import { EventEntity } from "../entities/event.entity";
 import {
   CreateEventInput,
   DeleteEventInput,
@@ -14,7 +14,7 @@ import errorHandler from "../utils/error";
 export default class EventResolver {
   @Query(() => [EventEntity])
   async events(): Promise<EventEntity[]> {
-    return await EventEntity.find();
+    return await EventEntity.find({ relations: { vouchers: true } });
   }
 
   @Query(() => EventEntity)
@@ -27,7 +27,9 @@ export default class EventResolver {
   }
 
   @Mutation(() => EventEntity)
-  async createEvent(@Arg("input") input: CreateEventInput):Promise<EventEntity> {
+  async createEvent(
+    @Arg("input") input: CreateEventInput
+  ): Promise<EventEntity> {
     const newEvent = new EventEntity();
     newEvent.title = input.title;
     newEvent.maxVoucher = input.maxVoucher;
@@ -44,15 +46,18 @@ export default class EventResolver {
       if (!foundEvent) {
         throw new ApolloError("Event not found", "400");
       }
-      if(foundEvent.quantityCreated > input.maxVoucher){
-        throw new ApolloError("Maximum voucher must be greater than quantity issued", "400")
+      if (foundEvent.quantityCreated > input.maxVoucher) {
+        throw new ApolloError(
+          "Maximum voucher must be greater than quantity issued",
+          "400"
+        );
       }
       foundEvent.title = input.title;
       foundEvent.maxVoucher = input.maxVoucher;
       foundEvent.save();
       return foundEvent;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       errorHandler(error);
     }
   }
