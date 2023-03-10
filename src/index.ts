@@ -8,7 +8,8 @@ import dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import morgan from "morgan"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import morgan from "morgan";
 
 import { resolvers } from "./resolvers";
 import { User } from "./schema/user.schema";
@@ -17,23 +18,23 @@ import authChecker from "./utils/authChecker";
 import { verifyJwt } from "./utils/jwt";
 import { connectToMongo } from "./utils/mongo";
 import { postgresqlConnection } from "./utils/mysqlDataSource";
+import "./bull/workers/sendMail.worker" 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import config from "config"
+import config from "config";
+import serverAdapter from "./bull";
 dotenv.config();
 
 async function bootstrap() {
   // Build the schema
-
   const schema = await buildSchema({
     resolvers,
     authChecker,
   });
-  
   // Init express
   const app = express();
-
   app.use(cookieParser());
-  app.use(morgan("combined"))
+  // app.use(morgan("combined"));
+  app.use('/admin/queues', serverAdapter.getRouter());
 
   // Create the apollo server
   const server = new ApolloServer({

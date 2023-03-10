@@ -6,6 +6,7 @@ import { customAlphabet } from "nanoid";
 import { EventEntity } from "../entities/event.entity";
 import { AppDataSource } from "../utils/mysqlDataSource";
 import { InsertResult } from "typeorm";
+import { emailQueue } from '../bull/queues/queue.email';
 
 @Resolver()
 export default class VoucherResolver {
@@ -45,6 +46,7 @@ export default class VoucherResolver {
         return newVoucher.raw[0];
       }
     );
+    await emailQueue.add("email",voucher.code)
     return voucher;
   }
 }
