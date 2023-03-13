@@ -6,6 +6,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "pm2": "NODE_ENV=production pm2 start src/index.ts --watch",
+    "start": "ts-node src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "migrations:generate": "yarn typeorm-ts-node-esm migration:generate ./src/migrations/update-database -d ./src/utils/mysqlDataSource.ts",
     "migrations:run": "typeorm migration:run -- -d ./src/configs/database.config.ts",
