@@ -31,5 +31,6 @@ export class EventEntity extends BaseEntity {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
+  @Field(() => [VoucherEntity])
   vouchers: Promise<VoucherEntity[]>;
 }
