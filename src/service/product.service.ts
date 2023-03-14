@@ -4,8 +4,11 @@ import {
   ProductModel,
 } from "../schema/product.schema";
 import { User } from "../schema/user.schema";
+import {Service,Inject} from "typedi"
 
+@Service()
 class ProductService {
+  @Inject("ProductService")
   async createProduct(input: CreateProductInput & { user: User["_id"] }) {
     return ProductModel.create(input);
   }

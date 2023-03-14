@@ -1,4 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {Service} from "typedi"
+
 import {
   CreateProductInput,
   GetProductInput,
@@ -6,7 +8,7 @@ import {
 } from "../schema/product.schema";
 import ProductService from "../service/product.service";
 import Context from "../types/context";
-
+@Service()
 @Resolver()
 export default class ProductResolver {
   constructor(private productService: ProductService) {

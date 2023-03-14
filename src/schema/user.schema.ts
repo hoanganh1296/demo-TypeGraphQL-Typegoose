@@ -9,7 +9,8 @@ import {
 import { AsQueryMethod } from "@typegoose/typegoose/lib/types";
 import bcrypt from "bcrypt";
 import { IsEmail, MaxLength, MinLength } from "class-validator";
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Authorized, Field, InputType, ObjectType } from "type-graphql";
+import { Role } from "../types/type.enum";
 
 function findByEmail(
   this: ReturnModelType<typeof User, QueryHelpers>,
@@ -39,7 +40,7 @@ interface QueryHelpers {
 @ObjectType()
 export class User {
   @Field(() => String)
-  _id: string;
+  public readonly _id: string;
 
   @Field(() => String)
   @prop({ required: true })
@@ -49,8 +50,15 @@ export class User {
   @prop({ required: true })
   email: string;
 
+  @Authorized(Role.ADMIN)
+  @Field(() => String)
   @prop({ required: true })
   password: string;
+
+  @Authorized(Role.ADMIN)
+  @Field((_type) => Role, { nullable: true })
+  @prop({ default: Role.USER, enum: Role, type: String })
+  public role!: Role;
 }
 
 export const UserModel = getModelForClass<typeof User, QueryHelpers>(User);

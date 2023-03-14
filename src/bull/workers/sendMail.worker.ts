@@ -5,8 +5,6 @@ import { sendMailJob } from "../job/mail.job";
 import { queueName } from "../queues/queue.email";
 
 
-console.log(queueName);
-
 const emailWorker = new Worker(queueName, sendMailJob, {
   connection: redisConnection,
 });

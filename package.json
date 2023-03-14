@@ -37,6 +37,7 @@
     "colors": "^1.4.0",
     "config": "^3.3.6",
     "cookie-parser": "^1.4.6",
+    "dataloader": "^2.2.2",
     "dotenv": "^10.0.0",
     "graphql": "15.x",
     "jsonwebtoken": "^8.5.1",
@@ -50,9 +51,10 @@
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
+    "type-graphql": "^1.2.0-rc.1",
+    "typedi": "^0.10.0",
     "typeorm": "^0.3.12",
-    "winston": "^3.8.2",
-    "type-graphql": "^1.2.0-rc.1"
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

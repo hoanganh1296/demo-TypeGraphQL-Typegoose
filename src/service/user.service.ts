@@ -1,6 +1,11 @@
 import { ApolloError } from "apollo-server-errors";
 import bcrypt from "bcrypt";
-import { CreateUserInput, LoginInput, UserModel } from "../schema/user.schema";
+import {
+  CreateUserInput,
+  LoginInput,
+  User,
+  UserModel,
+} from "../schema/user.schema";
 import Context from "../types/context";
 import { signJwt } from "../utils/jwt";
 
@@ -38,9 +43,15 @@ class UserService {
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
     });
-    
+
     // return the jwt
     return token;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const listUsers = await UserModel.find();
+
+    return listUsers;
   }
 }
 

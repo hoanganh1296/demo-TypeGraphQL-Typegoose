@@ -1,7 +1,8 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { CreateUserInput, LoginInput, User } from "../schema/user.schema";
 import UserService from "../service/user.service";
 import Context from "../types/context";
+import { Role } from "../types/type.enum";
 
 @Resolver()
 export default class UserResolver {
@@ -19,8 +20,16 @@ export default class UserResolver {
     return this.userService.login(input, context);
   }
 
+  @Authorized()
   @Query(() => User, { nullable: true })
-  me(@Ctx() context: Context) {
-    return context.user;
+  me(@Ctx() { user }: Required<Context>) {
+    return user;
+  }
+
+  @Authorized(Role.ADMIN)
+  @Query(() => [User])
+  public async allUser(): Promise<User[]> {
+    const response =  this.userService.getAllUsers();
+    return response;
   }
 }
